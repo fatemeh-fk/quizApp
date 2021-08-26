@@ -13,19 +13,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var falseBtn: UIButton!
     @IBOutlet weak var progressBar: UIProgressView!
     @IBOutlet weak var quesionLabel: UILabel!
-   
+   var quizBrain=QuizBrain()
     
-//    let quiz=[
-//        Question(text:"four+two is 6", answer:"True"),
-//        Question(text:"four+10 is 10", answer:"False"),
-//        Question(text:"four+two is 6", answer:"True"),
-//        Question(text:"four+two is 6", answer:"True"),
-//        Question(text:"four-two is 2", answer:"True"),
-//        Question(text:"four+two is 6", answer:"True"),
-//       
-//    ]
+    @IBOutlet weak var pageLabel: UILabel!
     
-    var questionNumber=0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -35,12 +27,13 @@ class ViewController: UIViewController {
     }
 
     @IBAction func ActionBtn(_ sender: UIButton) {
-        let userAnswer = sender.currentTitle
+        let userAnswer = sender.currentTitle!
        
         //let actualAnswr = quiz[questionNumber][1]
-        let actualAnswr = quiz[questionNumber].answer
+       // let actualAnswr = quiz[questionNumber].answer
+       let userGotRifht = quizBrain.checkAnswer(userAnswer)
         
-        if userAnswer == actualAnswr{
+        if userGotRifht{
             sender.backgroundColor = UIColor.green
            
             
@@ -48,22 +41,28 @@ class ViewController: UIViewController {
         else{
             sender.backgroundColor = UIColor.red
         }
-        if questionNumber + 1 < quiz.count {
-            questionNumber += 1
-        }
-        else {
-            questionNumber = 0
-        }
+//        if questionNumber + 1 < quiz.count {
+//            questionNumber += 1
+//        }
+//        else {
+//            questionNumber = 0
+//        }
+        quizBrain.nextQuestion()
         Timer.scheduledTimer(timeInterval: 0.2, target: self, selector:#selector(updateQuestion),userInfo:nil, repeats: false)
         //questionNumber += 1
         //updateQuestion()
     }
     
     @objc func updateQuestion(){
-        quesionLabel.text=quiz[questionNumber].text
+        
+        quesionLabel.text=quizBrain.getQuestionText()
+        progressBar.progress=quizBrain.getProgress()
+        pageLabel.text = "Score:\(quizBrain.getScore())"
+       // quesionLabel.text=quiz[questionNumber].text
         tureBtn.backgroundColor = UIColor.clear
         falseBtn.backgroundColor = UIColor.clear
-        progressBar.progress=Float(questionNumber + 1)/Float(quiz.count)    }
+        //progressBar.progress=Float(questionNumber + 1)/Float(quiz.count)    }
     
 }
 
+}
